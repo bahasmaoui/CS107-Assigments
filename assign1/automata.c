@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+void print_generation(unsigned long gen){
+    for (int i =0; i<64; i++){
+        int index = gen >> i &1;
+        if (index){
+            printf("%c",'*');
+        }
+        else{
+            printf(" ");
+        }
+    }
+    
+}
+
+
+
+
+unsigned long evolve(unsigned long generation, int rule){
+    unsigned long nextGen = 0;
+    for (int i=0; i<64; i++){
+        int shifter = i;
+        int left = (i<63)? (generation >> (shifter +1)& 1):0; 
+        int middle = generation >> (shifter)&1;
+        int right = (i>0) ? (generation >> (shifter -1)&1) : 0;
+        int index = (4*left + 2*middle + right);
+        int nthRule = rule >> index & 1;
+        if (nthRule) {
+            nextGen += (1UL << i);  // Set bit i
+        }
+        
+    }
+    return nextGen;
+    
+}
+
+
+
+int main(int argc, char *argv[]){
+    if (argc <4){
+        printf("Please fix arguments");
+        return 0;
+    }
+    unsigned long gen = strtoul(argv[1],NULL,0);
+    int rule = atoi(argv[2]);
+    int nGens = atoi(argv[3]);
+    unsigned long newGen=gen;
+    for (int i=0; i<nGens; i++){
+        print_generation(newGen);
+        newGen = evolve(newGen,rule);
+        printf("\n");
+    }
+    printf("\n");
+    printf("Old gen : %lu\n After %i evolution cycle(s):\n Next gen : %lu\n",gen,nGens,newGen);
+}

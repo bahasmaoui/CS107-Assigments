@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <math.h>
+
+unsigned long evolve(unsigned long generation){
+    unsigned long nextGen = 0;
+    for (int i=0; i<64; i++){
+        int shifter = generation -i
+        int left = generation >> (shifter +1)& 1; 
+        int middle = generation >> (shifter)&1;
+        int right = generation >> (shifter -1)&1;
+        long rule = 30;
+        int index = (4*left + 2*middle + right);
+        int nthRule = rule >> index && 1;
+        nextGen += pow(2,i)*nthRule;
+    }
+    return nextGen;
+    
+}
+
+
+
+int main(int argc, char *argv[]){
+    printf("Old gen : %lu, next gen : %lu\n",7UL,evolve(7));
+}
